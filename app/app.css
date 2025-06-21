@@ -98,9 +98,7 @@
 
 @theme {
   --default-font-family: "Inter", sans-serif;
-  --container-center: true;
-  --container-padding: 2rem;
-  --container-max-width-2xl: 1400px;
+  --breakpoint-xs: 480px;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));

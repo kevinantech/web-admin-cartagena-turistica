@@ -8,69 +8,34 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/useToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogIn } from "lucide-react";
-import { useState } from "react";
-import { useForm, type FieldErrors } from "react-hook-form";
-import { useNavigate } from "react-router";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 import type { Route } from "../+types/root";
-import { authService } from "../data/services/auth-service";
+import { LoginBodySchema, useLogin, type LoginBody } from "../hooks/useLogin";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Administrador" }];
 }
 
-export type AuthForm = z.infer<typeof AuthFormSchema>;
-
-export const AuthFormSchema = z.object({
-  email: z.string().email("Ingresar correo electronico"),
-  password: z.string().min(8, "Ingresar al menos 6 caracteres"),
-});
-
-const useLogin = () => {
+const useAuth = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AuthForm>({
-    resolver: zodResolver(AuthFormSchema),
+  } = useForm<LoginBody>({
+    resolver: zodResolver(LoginBodySchema),
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleAuth = async (formValue: AuthForm) => {
-    setIsLoading(true);
-    const { email, password } = formValue;
-    const error = await authService({ email, password });
-
-    error
-      ? toast({
-          title: "Error de autenticación",
-          description: error.message,
-          variant: "destructive",
-        })
-      : toast({
-          title: "Bienvenido",
-          description: "Inicio de sesión exitoso",
-          variant: "success",
-        });
-
-    /* navigate("/admin"); */
-    setIsLoading(false);
-  };
-
+  const { handleAuth: handleLogin, isLoading } = useLogin();
   return {
     form: { register, handleSubmit, errors },
-    handleAuth,
+    handleAuth: handleLogin,
     isLoading,
   };
 };
 
-export default function Login() {
-  const navigate = useNavigate();
-  const { form, handleAuth, isLoading } = useLogin();
+export default function Auth() {
+  const { form, handleAuth, isLoading } = useAuth();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center p-4">
@@ -130,7 +95,7 @@ export default function Login() {
               </div>
               <Button
                 type="submit"
-                className="w-full h-11 bg-cyan-600 hover:bg-cyan-700 text-white cursor-pointer"
+                className="w-full h-11 bg-cyan-600 hover:bg-cyan-700 text-white"
                 disabled={isLoading}
               >
                 {isLoading ? (
