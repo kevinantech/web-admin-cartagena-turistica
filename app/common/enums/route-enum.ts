@@ -1,6 +1,6 @@
 export enum Route {
-  Auth = "/auth",
-  Dashboard = "/dashboard",
-  Plans = "/plans",
-  DestinationsAndCategories = "/destinations-and-categories",
+  AUTH = "/auth",
+  PLANS = "/plans",
+  PLANS_CREATE = "/plans/create",
+  CATEGORIES = "/categories",
 }

@@ -40,7 +40,7 @@ api.interceptors.response.use(
     // Manejar errores de autenticación
     if (
       error.response?.status === 401 &&
-      window.location.pathname !== Route.Auth
+      window.location.pathname !== Route.AUTH
     ) {
     }
 

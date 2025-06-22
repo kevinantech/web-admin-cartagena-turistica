@@ -33,7 +33,7 @@ export const useLogin = () => {
           description: "Inicio de sesión exitoso",
           variant: "success",
         });
-        navigate(Route.Plans);
+        navigate(Route.PLANS);
       } else throw new Error("Error de autenticación");
     } catch (error) {
       toast({

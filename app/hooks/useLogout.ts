@@ -7,7 +7,7 @@ export const useLogout = () => {
 
   const handleLogout = () => {
     localStorage.removeItem(AUTH_KEY);
-    navigate(Route.Auth);
+    navigate(Route.AUTH);
   };
 
   return handleLogout;

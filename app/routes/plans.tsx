@@ -8,6 +8,7 @@ import {
   type CreatePlanBody,
 } from "../hooks/usePlan";
 import type { Route } from "../+types/root";
+import { Route as WebRoute } from "../common/enums/route-enum";
 import { useState } from "react";
 import {
   Card,
@@ -19,12 +20,16 @@ import {
 import { Input } from "../components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Textarea } from "../components/ui/textarea";
+import { useNavigate } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Gestión de Planes" }];
 }
 
 const _usePlans = () => {
+  const navigate = useNavigate();
+  const navigateToCreatePlan = () => navigate(WebRoute.PLANS_CREATE);
+
   const { handleCreatePlan, handleUpdatePlan } = usePlan();
   const { register, handleSubmit, reset } = useForm<CreatePlanBody>({
     resolver: zodResolver(CreatePlanBodySchema),
@@ -57,11 +62,12 @@ const _usePlans = () => {
     },
     handlePlan,
     isEditing: !!_id,
+    navigateToCreatePlan,
   };
 };
 
 export default function Plans() {
-  const { form, isEditing, handlePlan } = _usePlans();
+  const { form, isEditing, handlePlan, navigateToCreatePlan } = _usePlans();
 
   return (
     <div>
@@ -73,7 +79,7 @@ export default function Plans() {
           <p className="text-gray-600 mt-2">Administra tus planes turísticos</p>
         </div>
         <Button
-          onClick={form.openForm}
+          onClick={navigateToCreatePlan}
           className="w-full mt-5 bg-cyan-600 hover:bg-cyan-700 xs:w-auto xs:mt-0"
         >
           <Plus className="w-4 h-4 mr-2" />

@@ -50,14 +50,14 @@ export default function MainLayout() {
     {
       icon: Binoculars,
       label: "Planes",
-      path: Route.Plans,
-      active: location.pathname === Route.Plans,
+      path: Route.PLANS,
+      active: pathnameIncludeWebPath(location.pathname, Route.PLANS),
     },
     {
       icon: MapPin,
       label: "Destinos/Categorías",
-      path: Route.DestinationsAndCategories,
-      active: location.pathname === Route.DestinationsAndCategories,
+      path: Route.CATEGORIES,
+      active: location.pathname === Route.CATEGORIES,
     },
   ];
 
@@ -160,3 +160,7 @@ export default function MainLayout() {
     </div>
   );
 }
+
+const pathnameIncludeWebPath = (pathname: string, path: Route) => {
+  return pathname.split(path)[0] === "";
+};

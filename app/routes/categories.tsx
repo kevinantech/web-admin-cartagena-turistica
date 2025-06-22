@@ -43,7 +43,7 @@ export function HydrateFallback() {
   );
 }
 
-export default function DestinationAndCategories({
+export default function Categories({
   loaderData,
 }: Omit<Route.ComponentProps, "loaderData"> & {
   loaderData: Awaited<ReturnType<typeof clientLoader>>;

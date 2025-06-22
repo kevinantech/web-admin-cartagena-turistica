@@ -67,8 +67,8 @@ export default function Auth() {
                   id="email"
                   type="email"
                   placeholder="admin@explore.com"
-                  required
                   {...form.register("email")}
+                  error={!!form.errors.email}
                   className="h-11"
                 />
                 {form.errors.email && (
@@ -83,8 +83,8 @@ export default function Auth() {
                   id="password"
                   type="password"
                   placeholder="••••••••"
-                  required
                   {...form.register("password")}
+                  error={!!form.errors.password}
                   className="h-11"
                 />
                 {form.errors.password && (
