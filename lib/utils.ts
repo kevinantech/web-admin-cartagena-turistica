@@ -86,3 +86,5 @@ export function isValidRanges(
   const last = sorted[sorted.length - 1];
   return last.to === globalMax;
 }
+
+export type ExtractArrayPayload<T> = T extends (infer U)[] ? U : T;

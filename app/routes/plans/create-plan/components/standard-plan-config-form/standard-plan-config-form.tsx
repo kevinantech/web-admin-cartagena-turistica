@@ -1,10 +1,10 @@
-import { Label } from "@/components/ui/label";
-import type { UseStandardPlanConfigFormReturn } from "./standard-plan-config-form.hook";
-import { Input } from "@/components/ui/input";
-import { DollarSign, Plus, Trash, Users, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Controller } from "react-hook-form";
 import { CurrencyInput } from "@/components/ui/currency-input";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { DollarSign, Plus, Trash, Users, Wrench } from "lucide-react";
+import { Controller } from "react-hook-form";
+import type { UseStandardPlanConfigFormReturn } from "./standard-plan-config-form.hook";
 
 export type StandardPlanConfigFormProps = {
   form: UseStandardPlanConfigFormReturn;
@@ -15,7 +15,7 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
     errors,
     control,
     schedules,
-    pricePerGroup,
+    pricesPerGroup,
     register,
     handleSubmit,
     appendSchedule,
@@ -47,7 +47,9 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
             id="maxPeopleAllowed"
             type="number"
             placeholder="Ej: 50"
-            {...register("maxPeopleAllowed")}
+            {...register("maxPeopleAllowed", {
+              valueAsNumber: true,
+            })}
             error={!!errors.maxPeopleAllowed}
           />
         </div>
@@ -57,32 +59,36 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
             id="maxBookingsAllowed"
             type="number"
             placeholder="Ej: 10"
-            {...register("maxBookingsAllowed")}
+            {...register("maxBookingsAllowed", {
+              valueAsNumber: true,
+            })}
             error={!!errors.maxBookingsAllowed}
           />
         </div>
         <div className="flex flex-col gap-3">
-          <Label htmlFor="minPeoplePerBooking">Min. Personas</Label>
+          <Label htmlFor="minPeoplePerBooking">Min. Personas / Reservas</Label>
           <Input
             id="minPeoplePerBooking"
             type="number"
             placeholder="Ej: 2"
-            {...register("minPeoplePerBooking")}
+            {...register("minPeoplePerBooking", {
+              valueAsNumber: true,
+            })}
             error={!!errors.minPeoplePerBooking}
             min="1"
             required
           />
         </div>
         <div className="flex flex-col gap-3">
-          <Label htmlFor="maxPeoplePerBooking">Máx. Personas</Label>
+          <Label htmlFor="maxPeoplePerBooking">Máx. Personas / Reservas</Label>
           <Input
             id="maxPeoplePerBooking"
             type="number"
-            placeholder="Ej: 20"
-            {...register("maxPeoplePerBooking")}
             error={!!errors.maxPeoplePerBooking}
-            min="1"
-            required
+            placeholder="Ej: 20"
+            {...register("maxPeoplePerBooking", {
+              valueAsNumber: true,
+            })}
           />
         </div>
       </div>
@@ -146,9 +152,9 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
             </h3>
             <hr className="absolute bottom-0 w-full" />
           </div>
-          {pricePerGroup.length === 0 && <AppendGroupButton />}
+          {pricesPerGroup.length === 0 && <AppendGroupButton />}
         </div>
-        {pricePerGroup.length === 0 && (
+        {pricesPerGroup.length === 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <Label htmlFor="pricePerPerson">Precio Base</Label>
@@ -170,14 +176,14 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
           </div>
         )}
 
-        {pricePerGroup.length > 0 && (
+        {pricesPerGroup.length > 0 && (
           <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
             <h4 className="font-semibold text-gray-800 flex items-center">
               <Users className="w-4 h-4 mr-2" />
               Precios por Rangos de Personas
             </h4>
 
-            {pricePerGroup.map((group, index) => (
+            {pricesPerGroup.map((group, index) => (
               <div
                 key={group.id}
                 className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-white rounded-lg border"
@@ -186,29 +192,33 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
                   <Label>Mín. Personas</Label>
                   <Input
                     type="number"
-                    error={!!errors.pricePerGroup?.[index]?.minPeople}
+                    error={!!errors.pricesPerGroup?.[index]?.minPeople}
                     placeholder="Ej: 2"
-                    {...register(`pricePerGroup.${index}.minPeople`)}
+                    {...register(`pricesPerGroup.${index}.minPeople`, {
+                      valueAsNumber: true,
+                    })}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label>Máx. Personas</Label>
                   <Input
                     type="number"
-                    error={!!errors.pricePerGroup?.[index]?.maxPeople}
+                    error={!!errors.pricesPerGroup?.[index]?.maxPeople}
                     placeholder="Ej: 4"
-                    {...register(`pricePerGroup.${index}.maxPeople`)}
+                    {...register(`pricesPerGroup.${index}.maxPeople`, {
+                      valueAsNumber: true,
+                    })}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label>Precio</Label>
+                  <Label htmlFor={`pricesPerGroup.${index}`}>Precio</Label>
                   <Controller
-                    name={`pricePerGroup.${index}.amount`}
+                    name={`pricesPerGroup.${index}.amount`}
                     control={control}
                     render={({ field }) => (
                       <CurrencyInput
-                        id={`pricePerGroup.${index}.amount`}
-                        error={!!errors.pricePerGroup?.[index]?.amount}
+                        id={`pricesPerGroup.${index}`}
+                        error={!!errors.pricesPerGroup?.[index]?.amount}
                         onBlur={field.onBlur}
                         placeholder="$"
                         defaultValue={0}

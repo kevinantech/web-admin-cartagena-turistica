@@ -34,7 +34,7 @@ export const StandardPlanConfigSchema = z.object({
 
   pricingType: z.nativeEnum(PricingType),
   pricePerPerson: z.number().min(1).optional(),
-  pricePerGroup: z
+  pricesPerGroup: z
     .array(
       z.object({
         minPeople: z.number().min(1),
