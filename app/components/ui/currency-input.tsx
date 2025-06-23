@@ -5,7 +5,7 @@ import { cn } from "~/lib/utils";
 const CurrencyInput = React.forwardRef<
   HTMLInputElement,
   CurrencyInputProps & { error?: boolean }
->(({ error, className, prefix, ...props }, ref) => {
+>(({ error, className, prefix, allowNegativeValue, ...props }, ref) => {
   return (
     <CurrencyInputField
       className={cn(
@@ -17,8 +17,9 @@ const CurrencyInput = React.forwardRef<
         className
       )}
       ref={ref}
-      prefix={`${prefix || "$"} `}
       {...props}
+      prefix={`${prefix || "$"} `}
+      allowNegativeValue={allowNegativeValue ?? false}
     />
   );
 });
