@@ -13,11 +13,13 @@
       "@/*": ["./app/*"],
       "~/*": ["./*"]
     },
-    "esModuleInterop": true,
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
     "verbatimModuleSyntax": true,
-    "noEmit": true,
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
+    "noEmit": true,
     "strict": true
   }
 }

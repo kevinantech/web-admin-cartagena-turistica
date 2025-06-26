@@ -1,7 +1,7 @@
-import { API } from "@/common/enums/api-enum";
+import { ApiRoute } from "@/common/enums/api-route-enum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import api from "@/data/api";
 import type { GetCategoryData, GetDestinationData } from "@/data/models";
+import httpClient from "~/lib/http/http-client";
 import type { Route } from "../../../+types/root";
 import BackToPlansButton from "./components/back-to-plans-button/back-to-plans-button";
 import BasicInfoForm from "./components/basic-info-form/basic-info-form";
@@ -13,8 +13,10 @@ export function meta() {
 }
 
 export async function clientLoader() {
-  const { data: categories } = await api.get<GetCategoryData>(API.CATEGORIES);
-  const { data: destinations } = await api.get<GetDestinationData>(API.DESTINATIONS);
+  const { data: categories } = await httpClient.get<GetCategoryData>(ApiRoute.CATEGORIES);
+  const { data: destinations } = await httpClient.get<GetDestinationData>(
+    ApiRoute.DESTINATIONS
+  );
   return {
     categories,
     destinations,

@@ -1,6 +1,7 @@
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Select,
   SelectContent,
@@ -32,7 +33,7 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
   categories,
   destinations,
 }) => {
-  const isReservable = watch("reservable");
+  const isReservable = watch("isReservable");
 
   return (
     <>
@@ -48,6 +49,24 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
               {...register("name")}
               error={!!errors.name}
             />
+          </div>
+          <div className="flex flex-col gap-3">
+            <Label>Ubicación</Label>
+            <Select
+              {...register("originCityId")}
+              onValueChange={(v) => setValue("originCityId", v)}
+            >
+              <SelectTrigger error={!!errors.originCityId}>
+                <SelectValue placeholder="Selecciona una ubicación" />
+              </SelectTrigger>
+              <SelectContent>
+                {destinations.map((destination) => (
+                  <SelectItem key={destination.id} value={destination.id}>
+                    {destination.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex flex-col gap-3">
             <Label>Categoría</Label>
@@ -68,22 +87,19 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
             </Select>
           </div>
           <div className="flex flex-col gap-3">
-            <Label>Destino</Label>
-            <Select
-              {...register("destinationIds")}
-              onValueChange={(v) => setValue("destinationIds", v)}
-            >
-              <SelectTrigger error={!!errors.destinationIds}>
-                <SelectValue placeholder="Selecciona un destino" />
-              </SelectTrigger>
-              <SelectContent>
-                {destinations.map((destination) => (
-                  <SelectItem key={destination.id} value={destination.id}>
-                    {destination.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="destinations">Destinos</Label>
+            <Controller
+              name="destinationIds"
+              control={control}
+              render={({ field }) => (
+                <MultiSelect
+                  options={destinations.map((d) => ({ label: d.name, value: d.id }))}
+                  selected={field.value ?? []}
+                  onChange={(value) => field.onChange(value)}
+                  placeholder="Selecciona los destinos"
+                />
+              )}
+            />
           </div>
         </div>
         <div className="flex flex-col gap-3">
@@ -100,11 +116,11 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <Controller
-            name="reservable"
+            name="isReservable"
             control={control}
             render={({ field }) => (
               <Switch
-                id="reservable"
+                id="isReservable"
                 checked={isReservable}
                 defaultChecked={false}
                 onCheckedChange={(v) => {

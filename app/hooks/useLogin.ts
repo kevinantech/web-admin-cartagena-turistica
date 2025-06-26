@@ -1,10 +1,11 @@
+import { ApiRoute } from "@/common/enums/api-route-enum";
+import type { AuthData } from "@/data/models";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { API } from "../common/enums/api-enum";
-import api from "../data/api";
-import { toast } from "./useToast";
+import httpClient from "~/lib/http/http-client";
 import { Route } from "../common/enums/route-enum";
+import { toast } from "./useToast";
 export const AUTH_KEY = "access_token";
 
 export type LoginBody = z.infer<typeof LoginBodySchema>;
@@ -14,10 +15,6 @@ export const LoginBodySchema = z.object({
   password: z.string().min(8, "Ingresar al menos 6 caracteres"),
 });
 
-export type AuthData = {
-  access_token: string;
-};
-
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -25,7 +22,7 @@ export const useLogin = () => {
   const handleAuth = async (body: LoginBody) => {
     setIsLoading(true);
     try {
-      const response = await api.post<AuthData>(API.AUTH, body);
+      const response = await httpClient.post<AuthData>(ApiRoute.AUTH, body);
       if (response?.data?.access_token) {
         localStorage.setItem(AUTH_KEY, response.data.access_token);
         toast({

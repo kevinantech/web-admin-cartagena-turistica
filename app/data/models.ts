@@ -1,3 +1,7 @@
+export type AuthData = {
+  access_token: string;
+};
+
 export type GetCategoryData = {
   id: string;
   name: string;
