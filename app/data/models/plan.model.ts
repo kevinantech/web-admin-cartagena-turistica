@@ -3,11 +3,6 @@ export enum PricingType {
   PerGroup = "perGroup",
 }
 
-export enum BookingMode {
-  Automatic = "automatic",
-  Manual = "manual",
-}
-
 export enum RestrictionMode {
   ByPeople = "people",
   ByBookings = "bookings",

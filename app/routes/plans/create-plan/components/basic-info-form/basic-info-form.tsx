@@ -1,3 +1,4 @@
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -7,33 +8,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type { GetCategoryData, GetDestinationData } from "@/data/models";
 import type React from "react";
-import { type UseBasicInfoFormReturn } from "./basic-info-form.hook";
-import { Switch } from "@/components/ui/switch";
-import { Controller } from "react-hook-form";
-import { CurrencyInput } from "@/components/ui/currency-input";
+import { Controller, type UseFormReturn } from "react-hook-form";
+import type { CreateForm } from "../../create-plan.model";
 
 export type BasicInfoFormProps = {
-  form: UseBasicInfoFormReturn;
+  form: UseFormReturn<CreateForm>;
   categories: GetCategoryData;
   destinations: GetDestinationData;
 };
 
 const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
   form: {
-    errors,
     control,
-    isReservationAutomatic,
+    formState: { errors },
     register,
-    setCategoryId,
-    setBookingMode,
-    setDestinations,
+    setValue,
+    watch,
   },
   categories,
   destinations,
 }) => {
+  const isReservable = watch("reservable");
+
   return (
     <>
       <div className="space-y-4">
@@ -51,13 +51,16 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           </div>
           <div className="flex flex-col gap-3">
             <Label>Categoría</Label>
-            <Select {...register("categoryId")} onValueChange={setCategoryId}>
+            <Select
+              {...register("categoryId")}
+              onValueChange={(v) => setValue("categoryId", v)}
+            >
               <SelectTrigger error={!!errors.categoryId}>
                 <SelectValue placeholder="Selecciona una categoría" />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category) => (
-                  <SelectItem key={category._id} value={category._id.toString()}>
+                  <SelectItem key={category.id} value={category.id}>
                     {category.name}
                   </SelectItem>
                 ))}
@@ -66,13 +69,16 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           </div>
           <div className="flex flex-col gap-3">
             <Label>Destino</Label>
-            <Select {...register("destinations")} onValueChange={setDestinations}>
-              <SelectTrigger error={!!errors.destinations}>
+            <Select
+              {...register("destinationIds")}
+              onValueChange={(v) => setValue("destinationIds", v)}
+            >
+              <SelectTrigger error={!!errors.destinationIds}>
                 <SelectValue placeholder="Selecciona un destino" />
               </SelectTrigger>
               <SelectContent>
                 {destinations.map((destination) => (
-                  <SelectItem key={destination._id} value={destination._id.toString()}>
+                  <SelectItem key={destination.id} value={destination.id}>
                     {destination.name}
                   </SelectItem>
                 ))}
@@ -93,15 +99,26 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
 
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <Switch
-            id="automaticReservation"
-            checked={isReservationAutomatic}
-            onCheckedChange={setBookingMode}
+          <Controller
+            name="reservable"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                id="reservable"
+                checked={isReservable}
+                defaultChecked={false}
+                onCheckedChange={(v) => {
+                  field.onChange(v);
+                }}
+                onBlur={field.onBlur}
+              />
+            )}
           />
+
           <Label htmlFor="automaticReservation">Reservación Automática</Label>
         </div>
 
-        {!isReservationAutomatic && (
+        {!isReservable && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <div className="flex flex-col gap-3">
               <Label htmlFor="displayPrice">Precio</Label>

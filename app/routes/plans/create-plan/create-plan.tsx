@@ -1,13 +1,11 @@
-import { ApiRoutes } from "@/common/enums/api-routes-enum";
+import { API } from "@/common/enums/api-enum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import api from "@/data/api";
 import type { GetCategoryData, GetDestinationData } from "@/data/models";
 import type { Route } from "../../../+types/root";
 import BackToPlansButton from "./components/back-to-plans-button/back-to-plans-button";
 import BasicInfoForm from "./components/basic-info-form/basic-info-form";
-import useBasicInfoForm from "./components/basic-info-form/basic-info-form.hook";
-import StandardPlanConfigForm from "./components/standard-plan-config-form/standard-plan-config-form";
-import useStandardPlanConfigForm from "./components/standard-plan-config-form/standard-plan-config-form.hook";
+import ButtonGroup from "./components/button-group/button-group";
 import useCreatePlanHook from "./create-plan.model";
 
 export function meta() {
@@ -15,8 +13,8 @@ export function meta() {
 }
 
 export async function clientLoader() {
-  const { data: categories } = await api.get<GetCategoryData>(ApiRoutes.Category);
-  const { data: destinations } = await api.get<GetDestinationData>(ApiRoutes.Destination);
+  const { data: categories } = await api.get<GetCategoryData>(API.CATEGORIES);
+  const { data: destinations } = await api.get<GetDestinationData>(API.DESTINATIONS);
   return {
     categories,
     destinations,
@@ -29,9 +27,7 @@ export default function ({
   loaderData: Awaited<ReturnType<typeof clientLoader>>;
 }) {
   const { categories, destinations } = loaderData;
-  const formBasic = useBasicInfoForm();
-  const formStandard = useStandardPlanConfigForm();
-  const { handleCreate } = useCreatePlanHook({ formBasic, formStandard });
+  const { form, handleCreate, handleSubmitError } = useCreatePlanHook();
 
   return (
     <div className="space-y-6">
@@ -41,15 +37,19 @@ export default function ({
           <CardTitle className="text-cyan-900">Nuevo Plan Turístico</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleCreate} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleCreate, handleSubmitError)}
+            className="space-y-6"
+          >
             <BasicInfoForm
-              form={formBasic}
+              form={form}
               categories={categories}
               destinations={destinations}
             />
-            {formBasic.isReservationAutomatic && (
+            {/* {formBasic.isReservationAutomatic && (
               <StandardPlanConfigForm form={formStandard} />
-            )}
+            )} */}
+            <ButtonGroup />
           </form>
         </CardContent>
       </Card>

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+/* import { Button } from "@/components/ui/button";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,6 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
     schedules,
     pricesPerGroup,
     register,
-    handleSubmit,
     appendSchedule,
     removeSchedule,
     appendPricePerGroup,
@@ -39,7 +38,9 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
       </h3>
       <hr className="mb-8" />
 
-      {/* Restrictions */}
+      {
+        // Restrictions
+      }
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-3">
           <Label htmlFor="maxPeopleAllowed">Máx. Personas/Horario</Label>
@@ -76,7 +77,6 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
             })}
             error={!!errors.minPeoplePerBooking}
             min="1"
-            required
           />
         </div>
         <div className="flex flex-col gap-3">
@@ -93,7 +93,9 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
         </div>
       </div>
 
-      {/* Schedule Configuration */}
+      {
+        //Schedule Configuration
+      }
       <div className="space-y-4 mb-8 rounded-lg p-4 bg-gray-50">
         <div className="flex justify-between items-center">
           <h4 className="font-semibold text-gray-800">Horarios Disponibles</h4>
@@ -114,7 +116,6 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
                 type="time"
                 {...register(`schedules.${index}.startTime`)}
                 error={!!errors.schedules?.[index]?.startTime}
-                required
               />
             </div>
             <div className="flex flex-col gap-3">
@@ -123,7 +124,6 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
                 type="time"
                 {...register(`schedules.${index}.endTime`)}
                 error={!!errors.schedules?.[index]?.endTime}
-                required
               />
             </div>
 
@@ -142,7 +142,9 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
         ))}
       </div>
 
-      {/* Price Configuration */}
+      {
+        // Price Configuration
+      }
       <div className="space-y-4">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="relative flex-1 flex items-center">
@@ -251,3 +253,4 @@ const StandardPlanConfigForm: React.FC<StandardPlanConfigFormProps> = ({
 };
 
 export default StandardPlanConfigForm;
+ */

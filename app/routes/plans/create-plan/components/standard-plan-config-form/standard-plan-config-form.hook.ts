@@ -3,7 +3,7 @@
  * If you need to read information about a field from the hook useFieldArray avoid it,
  * it does not contain updated information about the field. Instead, use watch.
  */
-import { type StandardPlanConfig, StandardPlanConfigSchema } from "@/hooks/useCreatePlan";
+/* import { type StandardPlanConfig, StandardPlanConfigSchema } from "@/hooks/useCreatePlan";
 import { toast } from "@/hooks/useToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -20,7 +20,7 @@ export type UseStandardPlanConfigFormReturn = ReturnType<
 const useStandardPlanConfigForm = () => {
   const {
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     register,
     getValues,
     handleSubmit,
@@ -51,6 +51,16 @@ const useStandardPlanConfigForm = () => {
         variant: "destructive",
       });
     }
+
+    // TODO: Usar esta parte en la sección de validación del formulario.
+    if (minPeoplePerBooking >= maxPeoplePerBooking) {
+      return toast({
+        title: "Configuración de cupos",
+        description: "El mínimo de personas no puede ser mayor o igual al máximo",
+        variant: "destructive",
+      });
+    }
+
     const isPricesEmpty = pricesPerGroup.length === 0;
     const lastIndex = pricesPerGroup.length - 1;
     const prevPricePerGroup = getValues(`pricesPerGroup.${lastIndex}`);
@@ -70,6 +80,7 @@ const useStandardPlanConfigForm = () => {
     errors,
     control,
     schedules,
+    isSubmitting,
     pricesPerGroup,
     register,
     handleSubmit,
@@ -81,3 +92,4 @@ const useStandardPlanConfigForm = () => {
 };
 
 export default useStandardPlanConfigForm;
+ */

@@ -1,21 +1,14 @@
-import { BookingMode, PricingType, RestrictionMode } from "@/data/models/plan.model";
-import z from "zod";
-
-export type CreatePlanBody = z.infer<typeof CreatePlanBodySchema>;
-export type StandardPlanConfig = z.infer<typeof StandardPlanConfigSchema>;
-
-export const CreatePlanBodySchema = z.object({
-  name: z.string().min(1, { message: "El nombre es requerido" }),
+/* export const CreateBasicBodySchema = z.object({
+  name: z.string().min(1),
   description: z.string().min(1, { message: "La descripción es requerida" }),
-  displayPrice: z.number().min(1, { message: "El precio es requerido" }).optional(),
+  displayPrice: z.number().positive(),
   destinations: z
     .array(z.string().min(1, { message: "El destino es requerido" }))
     .min(1, { message: "Debe haber al menos una destino relacionado" }),
-  categoryId: z.string().min(1, { message: "La categoría es requerida" }),
-  bookingMode: z.nativeEnum(BookingMode),
+  reservable: z.boolean(),
 });
-
-export const StandardPlanConfigSchema = z.object({
+ */
+/* export const StandardPlanConfigSchema = z.object({
   schedules: z
     .array(
       z.object({
@@ -44,14 +37,14 @@ export const StandardPlanConfigSchema = z.object({
     )
     .min(1)
     .optional(),
-});
+}); */
 
 export const useCreatePlan = () => {
-  const handleCreatePlan = async (body: CreatePlanBody) => {};
-  const handleCreateStandardPlan = async (body: {}) => {};
+  const createBasic = async (body: any /* CreateBasicBody */) => {
+    console.log("🚀 ~ handleCreatePlan ~ body:", body);
+  };
 
   return {
-    handleCreatePlan,
-    handleCreateStandardPlan,
+    createBasic,
   };
 };

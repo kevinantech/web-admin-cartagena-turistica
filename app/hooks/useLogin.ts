@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import { ApiRoutes } from "../common/enums/api-routes-enum";
+import { API } from "../common/enums/api-enum";
 import api from "../data/api";
 import { toast } from "./useToast";
 import { Route } from "../common/enums/route-enum";
@@ -25,7 +25,7 @@ export const useLogin = () => {
   const handleAuth = async (body: LoginBody) => {
     setIsLoading(true);
     try {
-      const response = await api.post<AuthData>(ApiRoutes.Auth, body);
+      const response = await api.post<AuthData>(API.AUTH, body);
       if (response?.data?.access_token) {
         localStorage.setItem(AUTH_KEY, response.data.access_token);
         toast({

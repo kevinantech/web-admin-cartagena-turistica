@@ -1,9 +1,9 @@
 import axios from "axios";
+import { API } from "../common/enums/api-enum";
 import { Route } from "../common/enums/route-enum";
-import { ApiRoutes } from "../common/enums/api-routes-enum";
 import { AUTH_KEY } from "../hooks/useLogin";
 
-const API_HOST = "http://192.168.1.7:3000/";
+const API_HOST = "http://192.168.1.7:10250/";
 const TIMEOUT = 10000;
 
 const api = axios.create({
@@ -16,7 +16,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const url = config.url;
-    if (url?.includes(ApiRoutes.Auth)) return config;
+    if (url?.includes(API.AUTH)) return config;
 
     // Inyecta el token si la ruta no es Auth.
     if (typeof window !== "undefined" && window.localStorage) {
@@ -38,10 +38,7 @@ api.interceptors.response.use(
   },
   (error) => {
     // Manejar errores de autenticación
-    if (
-      error.response?.status === 401 &&
-      window.location.pathname !== Route.AUTH
-    ) {
+    if (error.response?.status === 401 && window.location.pathname !== Route.AUTH) {
     }
 
     return Promise.reject(error);

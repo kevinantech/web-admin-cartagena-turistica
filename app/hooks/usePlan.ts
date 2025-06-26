@@ -55,13 +55,13 @@ export const UpdatePlanBodySchema = CreatePlanBodySchema.extend({
   id: z.string().min(1),
 });
 
-export const PlanScheduleSchema = z.object({});
-
-export const PricePerGroupSchema = z.object({});
-
 export const usePlan = () => {
-  const handleCreatePlan = async (body: CreatePlanBody) => {};
-  const handleUpdatePlan = async (body: UpdatePlanBody) => {};
+  const handleCreatePlan = async (body: CreatePlanBody) => {
+    console.log("🚀 ~ handleCreatePlan ~ body:", body);
+  };
+  const handleUpdatePlan = async (body: UpdatePlanBody) => {
+    console.log("🚀 ~ handleUpdatePlan ~ body:", body);
+  };
 
   return {
     handleCreatePlan,

@@ -1,9 +1,9 @@
 export type GetCategoryData = {
-  _id: number;
+  id: string;
   name: string;
 }[];
 
 export type GetDestinationData = {
-  _id: number;
+  id: string;
   name: string;
 }[];
