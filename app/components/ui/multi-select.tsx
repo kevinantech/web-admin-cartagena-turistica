@@ -24,6 +24,7 @@ interface MultiSelectProps {
   onChange: (selected: string[]) => void;
   placeholder?: string;
   className?: string;
+  error?: boolean;
 }
 
 export function MultiSelect({
@@ -32,6 +33,7 @@ export function MultiSelect({
   onChange,
   placeholder = "Seleccionar elementos...",
   className,
+  error,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -46,7 +48,14 @@ export function MultiSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between", className)}
+          className={cn(
+            "w-full justify-between",
+            {
+              "border-destructive focus-visible:ring-destructive focus-visible:border-input":
+                error,
+            },
+            className
+          )}
         >
           <div className="flex gap-1 flex-wrap">
             {selected.length > 0 ? (
@@ -56,7 +65,6 @@ export function MultiSelect({
                   <Badge
                     variant="secondary"
                     key={item}
-                    className="mr-1 mb-1"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleUnselect(item);

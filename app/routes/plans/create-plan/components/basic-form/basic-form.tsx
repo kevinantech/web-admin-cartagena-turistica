@@ -11,29 +11,23 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { GetCategoryData, GetDestinationData } from "@/data/models";
 import type React from "react";
-import { Controller, type UseFormReturn } from "react-hook-form";
-import type { CreateForm } from "../../create-plan.model";
+import { useContext } from "react";
+import { Controller } from "react-hook-form";
+import { CreatePlanContext } from "../../create-plan.context";
 
-export type BasicInfoFormProps = {
-  form: UseFormReturn<CreateForm>;
-  categories: GetCategoryData;
-  destinations: GetDestinationData;
-};
+export type BasicFormProps = {};
 
-const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
-  form: {
+const BasicForm: React.FC<BasicFormProps> = ({}) => {
+  const { form, categories, destinations } = useContext(CreatePlanContext);
+  const {
     control,
     formState: { errors },
+    watch,
     register,
     setValue,
-    watch,
-  },
-  categories,
-  destinations,
-}) => {
-  const isReservable = watch("isReservable");
+  } = form;
+  const _reservable = watch("_reservable");
 
   return (
     <>
@@ -91,14 +85,35 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
             <Controller
               name="destinationIds"
               control={control}
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <MultiSelect
                   options={destinations.map((d) => ({ label: d.name, value: d.id }))}
                   selected={field.value ?? []}
                   onChange={(value) => field.onChange(value)}
                   placeholder="Selecciona los destinos"
+                  error={!!fieldState.error}
                 />
               )}
+            />
+          </div>
+          <div className="flex flex-col gap-3">
+            <Label htmlFor="contactPhone">Número de contacto</Label>
+            <Input
+              id="contactPhone"
+              type="number"
+              placeholder="+57 305 321 1234"
+              {...register("contactPhone")}
+              error={!!errors.contactPhone}
+            />
+          </div>
+          <div className="flex flex-col gap-3">
+            <Label htmlFor="duration">Duración (horas)</Label>
+            <Input
+              id="duration"
+              type="number"
+              placeholder="Ej: 3"
+              {...register("duration")}
+              error={!!errors.duration}
             />
           </div>
         </div>
@@ -116,12 +131,12 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <Controller
-            name="isReservable"
+            name="_reservable"
             control={control}
             render={({ field }) => (
               <Switch
                 id="isReservable"
-                checked={isReservable}
+                checked={_reservable}
                 defaultChecked={false}
                 onCheckedChange={(v) => {
                   field.onChange(v);
@@ -134,7 +149,7 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
           <Label htmlFor="automaticReservation">Reservación Automática</Label>
         </div>
 
-        {!isReservable && (
+        {!_reservable && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <div className="flex flex-col gap-3">
               <Label htmlFor="displayPrice">Precio</Label>
@@ -160,4 +175,4 @@ const BasicInfoForm: React.FC<BasicInfoFormProps> = ({
   );
 };
 
-export default BasicInfoForm;
+export default BasicForm;

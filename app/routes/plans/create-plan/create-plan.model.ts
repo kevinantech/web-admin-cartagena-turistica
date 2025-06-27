@@ -1,13 +1,8 @@
-import { RestrictionMode } from "@/common/enums/common-enums";
-import { PricingType } from "@/hooks/usePlan";
-import { useEffect } from "react";
-import {
-  useForm,
-  type FieldError,
-  type FieldErrors,
-  type RegisterOptions,
-} from "react-hook-form";
-import { z } from "zod";
+import { PricingType, RestrictionMode } from "@/common/enums/common-enums";
+import { CreatePlanDto } from "@/data/dto/plan/create-plan.dto";
+import { classValidatorResolver } from "@hookform/resolvers/class-validator";
+import { useEffect, useState } from "react";
+import { useForm, type FieldErrors } from "react-hook-form";
 
 export type CreateForm = {
   name: string;
@@ -18,18 +13,19 @@ export type CreateForm = {
   originCityId: string;
   destinationIds: string[];
   contactPhone: string;
-  isReservable: boolean;
-  schedule: {
-    start: string;
-  }[];
-  reservable: {
+  _reservable: boolean;
+  reservable?: {
+    schedule: {
+      start: string;
+    }[];
     restrictionBy: RestrictionMode;
-    maxPeopleAllowed: number;
-    maxBookingsAllowed: number;
+    maxPeopleAllowed?: number;
+    maxBookingsAllowed?: number;
     maxPeoplePerBooking: number;
     minPeoplePerBooking: number;
     pricingType: PricingType;
-    pricesPerGroup: {
+    pricePerPerson: number;
+    pricesPerGroup?: {
       minPeople: number;
       maxPeople: number;
       amount: number;
@@ -37,54 +33,25 @@ export type CreateForm = {
   };
 };
 
-export type CreateFormRules = {
-  [K in keyof CreateForm]?: RegisterOptions<CreateForm, K>;
-};
-
-export type FormError = {
-  [K in keyof CreateForm]?: FieldError;
-};
-
 export default () => {
   const form = useForm<CreateForm>({
     mode: "all",
-    defaultValues: { isReservable: false },
-    resolver: (values, context, options) => {
-      const error = { type: "validate" };
-      const errors: FormError = {};
-      const {
-        name,
-        categoryId,
-        description,
-        duration,
-        originCityId,
-        destinationIds,
-        displayPrice,
-        schedule,
-        contactPhone,
-        isReservable,
-      } = values;
-      if (v.name.safeParse(name)?.error) errors.name = error;
-      if (v.categoryId.safeParse(categoryId)?.error) errors.categoryId = error;
-      if (v.duration.safeParse(duration)?.error) errors.duration = error;
-      if (v.description.safeParse(description)?.error) errors.description = error;
-      if (!isReservable && v.displayPrice.safeParse(displayPrice)?.error)
-        errors.displayPrice = error;
-      if (v.originCityId.safeParse(originCityId)?.error) errors.originCityId = error;
-      if (v.destinationIds.safeParse(destinationIds)?.error)
-        errors.destinationIds = error;
-      if (v.contactPhone.safeParse(contactPhone)?.error) errors.contactPhone = error;
-      if (v.schedule.safeParse(schedule)?.error) errors.schedule = error;
-
-      /* if (isReservable) {
-      } */
-
-      return {
-        errors,
-        values,
-      };
+    defaultValues: {
+      reservable: {
+        restrictionBy: RestrictionMode.PEOPLE,
+        schedule: [{}],
+        pricingType: PricingType.PER_PERSON,
+      },
     },
+    resolver: classValidatorResolver(CreatePlanDto),
   });
+
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      console.log("🚀 ~ subscription ~ value:", value);
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
 
   useEffect(() => {
     if (Object.values(form.formState.errors).length !== 0) {
@@ -112,7 +79,7 @@ export default () => {
   };
 };
 
-const v = {
+/* const v = {
   name: z.string().trim().nonempty(),
   duration: z.number().int().positive(),
   categoryId: z.string().trim().nonempty(),
@@ -136,4 +103,4 @@ const v = {
       amount: z.number().positive(),
     },
   },
-};
+}; */

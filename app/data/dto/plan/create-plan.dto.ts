@@ -3,18 +3,21 @@ import { Type } from "class-transformer";
 import {
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsEnum,
   IsInt,
-  IsOptional,
+  IsNotEmpty,
   IsPositive,
   IsString,
   Max,
   ValidateIf,
   ValidateNested,
 } from "class-validator";
+import "reflect-metadata";
 
 class ScheduleDto {
   @IsString()
+  @IsNotEmpty()
   start: string; // formato: "HH:mm"
 }
 
@@ -79,12 +82,15 @@ export class CreateReservableDto {
 
 export class CreatePlanDto {
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsString()
+  @IsNotEmpty()
   categoryId: string;
 
   @IsString()
+  @IsNotEmpty()
   description: string;
 
   @IsPositive()
@@ -92,26 +98,27 @@ export class CreatePlanDto {
   duration: number;
 
   @IsString()
+  @IsNotEmpty()
   originCityId: string;
 
   @IsArray()
+  @ArrayMinSize(1)
   @IsString({ each: true })
   destinationIds: string[];
 
-  @IsOptional()
-  @Type(() => CreateReservableDto)
-  reservable: CreateReservableDto;
-
   @IsString()
+  @IsNotEmpty()
   contactPhone: string;
 
   @IsPositive()
-  @ValidateIf(({ reservable }: CreatePlanDto) => !reservable)
+  @ValidateIf((o: CreatePlanDto) => !o._reservable)
   displayPrice: number;
 
-  // NOTE: El manejo de esta propiedad es interno.
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  keywords: string[];
+  @IsBoolean()
+  _reservable: boolean;
+
+  @ValidateIf((o: CreatePlanDto) => o._reservable)
+  @ValidateNested()
+  @Type(() => CreateReservableDto)
+  reservable?: CreateReservableDto;
 }
