@@ -1,42 +1,24 @@
+import { ApiRoute } from "@/common/enums/api-route-enum";
 import { PricingType, RestrictionMode } from "@/common/enums/common-enums";
 import { CreatePlanDto } from "@/data/dto/plan/create-plan.dto";
+import type { CreatePlanData } from "@/data/models";
+import { toast } from "@/hooks/useToast";
 import { classValidatorResolver } from "@hookform/resolvers/class-validator";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
+import httpClient from "~/lib/http/http-client";
 
-export type CreateForm = {
-  name: string;
-  duration: number;
-  categoryId: string;
-  description: string;
-  displayPrice: number;
-  originCityId: string;
-  destinationIds: string[];
-  contactPhone: string;
-  _reservable: boolean;
-  reservable?: {
-    schedule: {
-      start: string;
-    }[];
-    restrictionBy: RestrictionMode;
-    maxPeopleAllowed?: number;
-    maxBookingsAllowed?: number;
-    maxPeoplePerBooking: number;
-    minPeoplePerBooking: number;
-    pricingType: PricingType;
-    pricePerPerson: number;
-    pricesPerGroup?: {
-      minPeople: number;
-      maxPeople: number;
-      amount: number;
-    }[];
-  };
+const getFormattedBody = (b: CreatePlanDto) => {
+  const { reservable, _reservable, ...base } = b;
+  if (b._reservable) return { ...base, reservable };
+  else return base;
 };
 
 export default () => {
-  const form = useForm<CreateForm>({
+  const form = useForm({
     mode: "all",
     defaultValues: {
+      _reservable: false,
       reservable: {
         restrictionBy: RestrictionMode.PEOPLE,
         schedule: [{}],
@@ -46,61 +28,59 @@ export default () => {
     resolver: classValidatorResolver(CreatePlanDto),
   });
 
-  useEffect(() => {
-    const subscription = form.watch((value) => {
-      console.log("🚀 ~ subscription ~ value:", value);
-    });
-    return () => subscription.unsubscribe();
-  }, [form.watch]);
+  const reset = () => [form.reset(), _setPictures([])];
 
-  useEffect(() => {
-    if (Object.values(form.formState.errors).length !== 0) {
-      console.log("🚀 ~ errors:", form.formState.errors);
+  const [_pictures, _setPictures] = useState<File[]>([]);
+  const pictures = { value: _pictures, set: _setPictures };
+
+  const handleCreate = async (body: CreatePlanDto) => {
+    if (!_pictures.length) {
+      return toast({
+        title: "Error",
+        description: "Debe cargar al menos una imagen",
+        variant: "destructive",
+      });
     }
-  }, [form.formState.errors]);
 
-  /**
-   * Verifica los campos del formBasic desde el submit del formStandard
-   */
-  /* useEffect(() => {
-    if (formStandard.isSubmitting) formBasic.trigger();
-  }, [formStandard.isSubmitting]); */
-
-  const handleCreate = async (body: CreateForm) => {
-    console.log("🚀 ~ handleCreate ~ body:", body);
+    const data = getFormattedBody(body);
+    const formData = new FormData();
+    _pictures.forEach((_p) => formData.append("pictures", _p));
+    try {
+      const response = await httpClient.post<CreatePlanData>(ApiRoute.PLANS, data);
+      const URL = `${ApiRoute.PLANS}/${response.data.id}/pictures`;
+      const _response = await httpClient.post(URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (_response.status === 201) {
+        reset();
+        return toast({
+          title: `${body.name} creado`,
+          description: `${body.name} ha sido creado exitosamente`,
+        });
+      } else {
+        return toast({
+          title: "Error",
+          description: "Las imágenes no se pudieron guardar",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {}
   };
 
-  const handleSubmitError = (errors: FieldErrors<CreateForm>) => {};
+  const handleSubmitError = (errors: FieldErrors<CreatePlanDto>) => {
+    if (errors.reservable?.pricesPerGroup?.root) {
+      return toast({
+        title: "Error en la configuración de precios",
+        description: "Revise que los rangos de precios sean continuos",
+        variant: "destructive",
+      });
+    }
+  };
 
   return {
     form,
+    pictures,
     handleCreate,
     handleSubmitError,
   };
 };
-
-/* const v = {
-  name: z.string().trim().nonempty(),
-  duration: z.number().int().positive(),
-  categoryId: z.string().trim().nonempty(),
-  description: z.string().trim().nonempty(),
-  displayPrice: z.number().positive(),
-  originCityId: z.string().trim().nonempty(),
-  destinationIds: z.array(z.string().trim().nonempty()).nonempty(),
-  contactPhone: z.string().trim().nonempty(),
-  schedule: z.date(),
-  reservable: {
-    restrictionBy: z.nativeEnum(RestrictionMode),
-    maxPeopleAllowed: z.number().int().positive(),
-    maxBookingsAllowed: z.number().int().positive(),
-    maxPeoplePerBooking: z.number().int().positive(),
-    minPeoplePerBooking: z.number().int().positive(),
-    pricingType: z.nativeEnum(PricingType),
-    pricePerPerson: z.number().positive(),
-    pricePerGroup: {
-      minPeople: z.number().int().positive(),
-      maxPeople: z.number().int().positive(),
-      amount: z.number().positive(),
-    },
-  },
-}; */

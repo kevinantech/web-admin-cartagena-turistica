@@ -49,8 +49,6 @@ export type Range = {
  * ];
  * isValidRanges(ranges, 1, 10) // devuelve false
  * ```
- *
- *
  * @param ranges Rango de números enteros
  * @param globalMin Límite inferior
  * @param globalMax Límite superior

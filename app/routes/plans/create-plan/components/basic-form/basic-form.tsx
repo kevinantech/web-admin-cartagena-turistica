@@ -15,11 +15,12 @@ import type React from "react";
 import { useContext } from "react";
 import { Controller } from "react-hook-form";
 import { CreatePlanContext } from "../../create-plan.context";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 export type BasicFormProps = {};
 
 const BasicForm: React.FC<BasicFormProps> = ({}) => {
-  const { form, categories, destinations } = useContext(CreatePlanContext);
+  const { form, pictures, categories, destinations } = useContext(CreatePlanContext);
   const {
     control,
     formState: { errors },
@@ -112,7 +113,7 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
               id="duration"
               type="number"
               placeholder="Ej: 3"
-              {...register("duration")}
+              {...register("duration", { valueAsNumber: true })}
               error={!!errors.duration}
             />
           </div>
@@ -126,6 +127,10 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
             error={!!errors.description}
           />
         </div>
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-gray-800">Imágenes del Plan</h3>
+          <ImageUpload images={pictures.value} onChange={pictures.set} maxImages={5} />
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -135,9 +140,7 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
             control={control}
             render={({ field }) => (
               <Switch
-                id="isReservable"
                 checked={_reservable}
-                defaultChecked={false}
                 onCheckedChange={(v) => {
                   field.onChange(v);
                 }}

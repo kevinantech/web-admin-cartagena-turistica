@@ -1,3 +1,8 @@
+/**
+ * API DTO
+ * Las propiedades que inicien con _ tienen una responsabilidad en el cliente y no en la API,
+ * por eso se demarca esa diferencia.
+ */
 import { PricingType, RestrictionMode } from "@/common/enums/common-enums";
 import { Type } from "class-transformer";
 import {
@@ -10,10 +15,50 @@ import {
   IsPositive,
   IsString,
   Max,
+  registerDecorator,
   ValidateIf,
   ValidateNested,
+  ValidatorConstraint,
+  type ValidationArguments,
+  type ValidatorConstraintInterface,
 } from "class-validator";
 import "reflect-metadata";
+import { isValidRanges } from "~/lib/utils";
+
+// ----------------------------------------------------------------------------
+// Validators
+// ----------------------------------------------------------------------------}
+
+@ValidatorConstraint({ name: "ValidatePricesPerGroup", async: false })
+export class ValidatePricesPerGroupValidator implements ValidatorConstraintInterface {
+  validate(property: any, args: ValidationArguments) {
+    const obj = args.object as CreateReservableDto;
+    return isValidRanges(
+      property as PricePerGroupDto[],
+      obj.minPeoplePerBooking,
+      obj.maxPeoplePerBooking
+    );
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return `${args.property} must contain valid price ranges that cover all possible group sizes between minPeoplePerBooking and maxPeoplePerBooking without overlaps`;
+  }
+}
+
+// Decorador para aplicar la validación
+export function ValidatePricesPerGroup() {
+  return function (object: any, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      validator: ValidatePricesPerGroupValidator,
+    });
+  };
+}
+
+// ----------------------------------------------------------------------------
+// DTOs
+// ----------------------------------------------------------------------------
 
 class ScheduleDto {
   @IsString()
@@ -24,11 +69,11 @@ class ScheduleDto {
 class PricePerGroupDto {
   @IsPositive()
   @IsInt()
-  minPeople: number;
+  from: number;
 
   @IsPositive()
   @IsInt()
-  maxPeople: number;
+  to: number;
 
   @IsPositive()
   amount: number;
@@ -49,11 +94,11 @@ export class CreateReservableDto {
 
   @ValidateIf((o: CreateReservableDto) => o.restrictionBy === RestrictionMode.PEOPLE)
   @IsPositive()
-  maxPeopleAllowed?: number;
+  maxPeopleAllowed: number;
 
   @ValidateIf((o: CreateReservableDto) => o.restrictionBy === RestrictionMode.BOOKINGS)
   @IsPositive()
-  maxBookingsAllowed?: number;
+  maxBookingsAllowed: number;
 
   @IsPositive()
   @IsInt()
@@ -75,9 +120,11 @@ export class CreateReservableDto {
 
   @ValidateIf((o: CreateReservableDto) => o.pricingType === PricingType.PER_GROUP)
   @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => PricePerGroupDto)
-  pricesPerGroup?: PricePerGroupDto[];
+  @ValidatePricesPerGroup()
+  pricesPerGroup: PricePerGroupDto[];
 }
 
 export class CreatePlanDto {
@@ -114,11 +161,11 @@ export class CreatePlanDto {
   @ValidateIf((o: CreatePlanDto) => !o._reservable)
   displayPrice: number;
 
-  @IsBoolean()
-  _reservable: boolean;
-
   @ValidateIf((o: CreatePlanDto) => o._reservable)
   @ValidateNested()
   @Type(() => CreateReservableDto)
   reservable?: CreateReservableDto;
+
+  @IsBoolean()
+  _reservable: boolean;
 }

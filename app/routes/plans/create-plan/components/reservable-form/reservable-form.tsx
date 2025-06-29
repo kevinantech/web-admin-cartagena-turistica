@@ -243,7 +243,11 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
         )}
 
         {pricesPerGroup.length > 0 && (
-          <div className="space-y-4 p-4 bg-gray-50 rounded-lg">
+          <div
+            className={`space-y-4 p-4 bg-gray-50 rounded-lg ${
+              errors.reservable?.pricesPerGroup?.root ? "border border-destructive" : ""
+            }`}
+          >
             <h4 className="font-semibold text-gray-800 flex items-center">
               <Users className="w-4 h-4 mr-2" />
               Precios por Rangos de Personas
@@ -258,9 +262,9 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
                   <Label>Mín. Personas</Label>
                   <Input
                     type="number"
-                    error={!!errors.reservable?.pricesPerGroup?.[index]?.minPeople}
+                    error={!!errors.reservable?.pricesPerGroup?.[index]?.from}
                     placeholder="Ej: 2"
-                    {...register(`reservable.pricesPerGroup.${index}.minPeople`, {
+                    {...register(`reservable.pricesPerGroup.${index}.from`, {
                       valueAsNumber: true,
                     })}
                   />
@@ -269,9 +273,9 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
                   <Label>Máx. Personas</Label>
                   <Input
                     type="number"
-                    error={!!errors.reservable?.pricesPerGroup?.[index]?.maxPeople}
+                    error={!!errors.reservable?.pricesPerGroup?.[index]?.to}
                     placeholder="Ej: 4"
-                    {...register(`reservable.pricesPerGroup.${index}.maxPeople`, {
+                    {...register(`reservable.pricesPerGroup.${index}.to`, {
                       valueAsNumber: true,
                     })}
                   />
