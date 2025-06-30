@@ -3,9 +3,13 @@ import { Route } from "./common/enums/route-enum";
 
 export default [
   route(Route.AUTH, "routes/auth.tsx"),
+  route(Route.ACTIVITIES, "routes/activities/index/index.tsx"),
   layout("components/layouts/MainLayout.tsx", [
-    route(Route.PLANS, "routes/plans.tsx"),
-    route(Route.PLANS_CREATE, "routes/plans/create-plan/create-plan.tsx"),
+    route(Route.EXPERIENCES, "routes/experiences/index/index.tsx"),
+    route(
+      Route.EXPERIENCES_CREATE,
+      "routes/experiences/create-experience/create-experience.tsx"
+    ),
     route(Route.CATEGORIES, "routes/categories.tsx"),
   ]),
 ] satisfies RouteConfig;

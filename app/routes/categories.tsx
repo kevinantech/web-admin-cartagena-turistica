@@ -4,15 +4,17 @@ import httpClient from "~/lib/http/http-client";
 import type { Route } from "../+types/root";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import type { GetCategoryData, GetDestinationData } from "../data/models";
+import type { GetCategoriesData, GetDestinationsData } from "../data/models";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Destinos/Categorías" }];
 }
 
 export async function clientLoader() {
-  const { data: categories } = await httpClient.get<GetCategoryData>(ApiRoute.CATEGORIES);
-  const { data: destinations } = await httpClient.get<GetDestinationData>(
+  const { data: categories } = await httpClient.get<GetCategoriesData>(
+    ApiRoute.CATEGORIES
+  );
+  const { data: destinations } = await httpClient.get<GetDestinationsData>(
     ApiRoute.DESTINATIONS
   );
   return {

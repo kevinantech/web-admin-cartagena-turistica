@@ -11,7 +11,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({}) => {
       <Button type="submit" className="bg-cyan-600 hover:bg-cyan-700">
         Crear Plan
       </Button>
-      <NavLink to={Route.PLANS}>
+      <NavLink to={Route.EXPERIENCES}>
         <Button type="button" variant="outline">
           Cancelar
         </Button>

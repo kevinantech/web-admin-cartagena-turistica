@@ -1,6 +1,7 @@
 export enum Route {
   AUTH = "/auth",
-  PLANS = "/plans",
-  PLANS_CREATE = "/plans/create",
+  EXPERIENCES = "/products",
+  EXPERIENCES_CREATE = "/products/create",
   CATEGORIES = "/categories",
+  ACTIVITIES = "/activities",
 }

@@ -14,13 +14,15 @@ import { Textarea } from "@/components/ui/textarea";
 import type React from "react";
 import { useContext } from "react";
 import { Controller } from "react-hook-form";
-import { CreatePlanContext } from "../../create-plan.context";
+import { CreateExperienceContext } from "../../create-experience.context";
 import { ImageUpload } from "@/components/ui/image-upload";
 
 export type BasicFormProps = {};
 
 const BasicForm: React.FC<BasicFormProps> = ({}) => {
-  const { form, pictures, categories, destinations } = useContext(CreatePlanContext);
+  const { form, pictures, categories, destinations } = useContext(
+    CreateExperienceContext
+  );
   const {
     control,
     formState: { errors },

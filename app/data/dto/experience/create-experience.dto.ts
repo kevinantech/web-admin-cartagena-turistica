@@ -127,7 +127,7 @@ export class CreateReservableDto {
   pricesPerGroup: PricePerGroupDto[];
 }
 
-export class CreatePlanDto {
+export class CreateExperienceDto {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -158,10 +158,10 @@ export class CreatePlanDto {
   contactPhone: string;
 
   @IsPositive()
-  @ValidateIf((o: CreatePlanDto) => !o._reservable)
+  @ValidateIf((o: CreateExperienceDto) => !o._reservable)
   displayPrice: number;
 
-  @ValidateIf((o: CreatePlanDto) => o._reservable)
+  @ValidateIf((o: CreateExperienceDto) => o._reservable)
   @ValidateNested()
   @Type(() => CreateReservableDto)
   reservable?: CreateReservableDto;

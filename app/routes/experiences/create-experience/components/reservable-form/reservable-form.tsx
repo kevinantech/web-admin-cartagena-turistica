@@ -13,12 +13,12 @@ import {
 import { DollarSign, Plus, Trash, Users, Wrench } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
-import { CreatePlanContext } from "../../create-plan.context";
+import { CreateExperienceContext } from "../../create-experience.context";
 
 export type ReservableFormProps = {};
 
 const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
-  const { form } = useContext(CreatePlanContext);
+  const { form } = useContext(CreateExperienceContext);
   const {
     control,
     formState: { errors },
@@ -194,7 +194,7 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
                   type="button"
                   title="Remover"
                   variant="outline"
-                  disabled={index === 0}
+                  disabled={index === 0 && schedules.length <= 1}
                   onClick={() => removeSchedule(index)}
                   className="text-red-600 border-red-200 hover:bg-red-50"
                 >

@@ -1,14 +1,14 @@
 import { ApiRoute } from "@/common/enums/api-route-enum";
 import { PricingType, RestrictionMode } from "@/common/enums/common-enums";
-import { CreatePlanDto } from "@/data/dto/plan/create-plan.dto";
-import type { CreatePlanData } from "@/data/models";
+import { CreateExperienceDto } from "@/data/dto/experience/create-experience.dto";
+import type { CreateExperienceData } from "@/data/models";
 import { toast } from "@/hooks/useToast";
 import { classValidatorResolver } from "@hookform/resolvers/class-validator";
 import { useState } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
 import httpClient from "~/lib/http/http-client";
 
-const getFormattedBody = (b: CreatePlanDto) => {
+const getFormattedBody = (b: CreateExperienceDto) => {
   const { reservable, _reservable, ...base } = b;
   if (b._reservable) return { ...base, reservable };
   else return base;
@@ -19,13 +19,15 @@ export default () => {
     mode: "all",
     defaultValues: {
       _reservable: false,
+      destinationIds: [],
       reservable: {
         restrictionBy: RestrictionMode.PEOPLE,
         schedule: [{}],
         pricingType: PricingType.PER_PERSON,
+        pricesPerGroup: [],
       },
     },
-    resolver: classValidatorResolver(CreatePlanDto),
+    resolver: classValidatorResolver(CreateExperienceDto),
   });
 
   const reset = () => [form.reset(), _setPictures([])];
@@ -33,7 +35,7 @@ export default () => {
   const [_pictures, _setPictures] = useState<File[]>([]);
   const pictures = { value: _pictures, set: _setPictures };
 
-  const handleCreate = async (body: CreatePlanDto) => {
+  const handleCreate = async (body: CreateExperienceDto) => {
     if (!_pictures.length) {
       return toast({
         title: "Error",
@@ -46,8 +48,11 @@ export default () => {
     const formData = new FormData();
     _pictures.forEach((_p) => formData.append("pictures", _p));
     try {
-      const response = await httpClient.post<CreatePlanData>(ApiRoute.PLANS, data);
-      const URL = `${ApiRoute.PLANS}/${response.data.id}/pictures`;
+      const response = await httpClient.post<CreateExperienceData>(
+        ApiRoute.EXPERIENCES,
+        data
+      );
+      const URL = `${ApiRoute.EXPERIENCES}/${response.data.id}/pictures`;
       const _response = await httpClient.post(URL, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -67,7 +72,7 @@ export default () => {
     } catch (error) {}
   };
 
-  const handleSubmitError = (errors: FieldErrors<CreatePlanDto>) => {
+  const handleSubmitError = (errors: FieldErrors<CreateExperienceDto>) => {
     if (errors.reservable?.pricesPerGroup?.root) {
       return toast({
         title: "Error en la configuración de precios",

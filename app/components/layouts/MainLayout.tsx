@@ -1,11 +1,4 @@
-import {
-  Binoculars,
-  LogOut,
-  MapPin,
-  Menu,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { Binoculars, LogOut, MapPin, Menu, X, type LucideIcon } from "lucide-react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import { Route } from "~/app/common/enums/route-enum";
 import { useLogout } from "~/app/hooks/useLogout";
@@ -50,8 +43,8 @@ export default function MainLayout() {
     {
       icon: Binoculars,
       label: "Planes",
-      path: Route.PLANS,
-      active: pathnameIncludeWebPath(location.pathname, Route.PLANS),
+      path: Route.EXPERIENCES,
+      active: pathnameIncludeWebPath(location.pathname, Route.EXPERIENCES),
     },
     {
       icon: MapPin,

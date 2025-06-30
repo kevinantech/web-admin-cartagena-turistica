@@ -1,6 +1,6 @@
 export enum ApiRoute {
   AUTH = "/account/authenticate",
-  PLANS = "/plans",
+  EXPERIENCES = "/experiences",
   CATEGORIES = "/categories",
   DESTINATIONS = "/destinations",
 }

@@ -1,7 +1,7 @@
 import { ApiRoute } from "@/common/enums/api-route-enum";
 import { AUTH_KEY } from "@/hooks/useLogin";
 import axios from "axios";
-const API_HOST = "http://192.168.1.6:10250/";
+const API_HOST = "http://localhost:10250";
 const TIMEOUT = 10000;
 
 const httpClient = axios.create({

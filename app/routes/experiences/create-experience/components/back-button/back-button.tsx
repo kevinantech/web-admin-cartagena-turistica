@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 
-const BackToPlansButton = () => {
+const BackButton = () => {
   return (
-    <Link to={Route.PLANS} className="block">
+    <Link to={Route.EXPERIENCES} className="block">
       <Button variant="outline" className="flex items-center">
         <ArrowLeft className="w-4 h-4 mr-2" />
         Volver a Planes
@@ -14,4 +14,4 @@ const BackToPlansButton = () => {
   );
 };
 
-export default BackToPlansButton;
+export default BackButton;
