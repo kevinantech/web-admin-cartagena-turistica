@@ -146,6 +146,10 @@ export class CreateExperienceDto {
 
   @IsString()
   @IsNotEmpty()
+  providerName: string;
+
+  @IsString()
+  @IsNotEmpty()
   originCityId: string;
 
   @IsArray()

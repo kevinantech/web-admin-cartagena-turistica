@@ -1,5 +1,4 @@
 import { ApiRoute } from "@/common/enums/api-route-enum";
-import { ReservationForm } from "@/components/reservation-form/reservation-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,59 +17,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import type { GetExperiencesData } from "@/data/models";
-import {
-  Calendar,
-  Clock,
-  DollarSign,
-  Heart,
-  MapPin,
-  ShoppingBag,
-  Star,
-} from "lucide-react";
+import type { Experience } from "@/data/models/experience.model";
+import { Calendar, Clock, DollarSign, MapPin, ShoppingBag } from "lucide-react";
+import { useState } from "react";
 import httpClient from "~/lib/http/http-client";
 import type { Route } from "../../../+types/root";
-
-interface Schedule {
-  id: number;
-  startTime: string;
-  endTime: string;
-  maxReservations: string;
-  maxPeople: string;
-}
-
-interface PriceRange {
-  id: number;
-  minPeople: string;
-  maxPeople: string;
-  price: string;
-}
-
-interface Plan {
-  id: number;
-  name: string;
-  location: string;
-  price: string;
-  description: string;
-  image: string;
-  category?: string;
-  destinations?: string[];
-  durationAmount?: string;
-  durationUnit?: string;
-  automaticReservation?: boolean;
-  schedules?: Schedule[];
-  priceRanges?: PriceRange[];
-  rating?: number;
-  reviews?: number;
-  difficulty?: "Fácil" | "Moderado" | "Difícil";
-  featured?: boolean;
-}
+import { ReservationForm } from "../components/reservation-form/reservation-form";
 
 export async function clientLoader() {
-  const { data: plans } = await httpClient.get<GetExperiencesData>(ApiRoute.EXPERIENCES);
+  const { data: experiences } = await httpClient.get<GetExperiencesData>(
+    ApiRoute.EXPERIENCES
+  );
 
-  return {
-    plans,
-  };
+  return { experiences };
 }
 
 export default function Shop({
@@ -78,7 +37,11 @@ export default function Shop({
 }: Omit<Route.ComponentProps, "loaderData"> & {
   loaderData: Awaited<ReturnType<typeof clientLoader>>;
 }) {
-  const { plans } = loaderData;
+  const { experiences } = loaderData;
+  const [reservationFormData, _setReservationFormData] = useState<Experience>();
+
+  const handleComplete = async () => {};
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
       {/* Header */}
@@ -274,9 +237,9 @@ export default function Shop({
           </div> */}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {plans?.map((plan) => (
+            {experiences?.map((exp) => (
               <Card
-                key={plan._id}
+                key={exp._id}
                 className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
               >
                 <CardHeader className="pb-4 relative">
@@ -298,14 +261,14 @@ export default function Shop({
                   </div>
                   <div className="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden">
                     <img
-                      src={plan.pictures[0]}
-                      alt={plan.name}
+                      src={exp.pictures[0]}
+                      alt={exp.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <div className="flex justify-between items-start mb-2">
-                    <CardTitle className="text-lg">{plan.name}</CardTitle>
-                    {!!plan.reservable && (
+                    <CardTitle className="text-lg">{exp.name}</CardTitle>
+                    {!!exp.reservable && (
                       <Badge className="bg-green-100 text-green-700 border-green-200 ml-2">
                         <Calendar className="w-3 h-3 mr-1" />
                         Reservable
@@ -314,11 +277,11 @@ export default function Shop({
                   </div>
                   <CardDescription className="flex items-center text-gray-600">
                     <MapPin className="w-4 h-4 mr-1" />
-                    {plan.originCity.name}
+                    {exp.originCity.name}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p className="text-sm text-gray-600 line-clamp-2">{plan.description}</p>
+                  <p className="text-sm text-gray-600 line-clamp-2">{exp.description}</p>
 
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center space-x-3">
@@ -328,12 +291,10 @@ export default function Shop({
                           <span className="font-medium">{plan.rating}</span>
                         </div>
                       )} */}
-                      {plan.duration.value && plan.duration.unit && (
+                      {exp.duration && (
                         <div className="flex items-center text-gray-600">
                           <Clock className="w-4 h-4 mr-1" />
-                          <span>
-                            {plan.duration.value} {plan.duration.unit}
-                          </span>
+                          <span>{exp.duration} h</span>
                         </div>
                       )}
                     </div>
@@ -350,7 +311,7 @@ export default function Shop({
                   <div className="flex items-center justify-between pt-4">
                     <div className="text-2xl font-bold text-cyan-600 flex items-center">
                       <DollarSign className="w-5 h-5 mr-1" />
-                      {plan.displayPrice}
+                      {exp.displayPrice}
                     </div>
                     <div className="space-x-2">
                       <Dialog>
@@ -361,17 +322,17 @@ export default function Shop({
                         </DialogTrigger>
                         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
-                            <DialogTitle className="text-2xl">{plan.name}</DialogTitle>
+                            <DialogTitle className="text-2xl">{exp.name}</DialogTitle>
                             <DialogDescription className="flex items-center text-gray-600 text-base">
                               <MapPin className="w-4 h-4 mr-1" />
-                              {plan.originCity.name}
+                              {exp.originCity.name}
                             </DialogDescription>
                           </DialogHeader>
                           <div className="space-y-6">
                             <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
                               <img
-                                src={plan.pictures[0]}
-                                alt={plan.name}
+                                src={exp.pictures[0]}
+                                alt={exp.name}
                                 className="w-full h-full object-cover"
                               />
                             </div>
@@ -383,14 +344,14 @@ export default function Shop({
                                 </h4>
                                 <div className="flex items-center text-cyan-600 font-bold text-xl">
                                   <DollarSign className="w-5 h-5 mr-1" />
-                                  {plan.displayPrice}
+                                  {exp.displayPrice}
                                 </div>
                               </div>
                               <div>
                                 <h4 className="font-semibold text-gray-900 mb-2">
                                   Categoría
                                 </h4>
-                                <p className="text-gray-700">{plan.category.name}</p>
+                                <p className="text-gray-700">{exp.category.name}</p>
                               </div>
                               <div>
                                 <h4 className="font-semibold text-gray-900 mb-2">
@@ -398,9 +359,7 @@ export default function Shop({
                                 </h4>
                                 <p className="text-gray-700 flex items-center">
                                   <Clock className="w-4 h-4 mr-1" />
-                                  {plan.duration.value && plan.duration.unit
-                                    ? `${plan.duration.value} ${plan.duration.unit}`
-                                    : "No especificada"}
+                                  {exp.duration ? `${exp.duration} h` : "No especificada"}
                                 </p>
                               </div>
                               <div>
@@ -428,17 +387,17 @@ export default function Shop({
                                 Descripción
                               </h4>
                               <p className="text-gray-600 leading-relaxed">
-                                {plan.description}
+                                {exp.description}
                               </p>
                             </div>
 
-                            {plan.destinations && plan.destinations.length > 0 && (
+                            {exp.destinations && exp.destinations.length > 0 && (
                               <div>
                                 <h4 className="font-semibold text-gray-900 mb-3">
                                   Destinos Incluidos
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
-                                  {plan.destinations.map((destination, index) => (
+                                  {exp.destinations.map((destination, index) => (
                                     <Badge
                                       key={index}
                                       className="bg-blue-100 text-blue-700 border-blue-200"
@@ -453,12 +412,14 @@ export default function Shop({
                         </DialogContent>
                       </Dialog>
                       <Button
-                        /* onClick={() => handlePlanSelect(plan)} */
+                        onClick={() =>
+                          exp.reservable ? _setReservationFormData(exp) : null
+                        }
                         className="bg-cyan-600 hover:bg-cyan-700"
                         size="sm"
                       >
                         <ShoppingBag className="w-4 h-4 mr-1" />
-                        {!!plan.reservable ? "Reservar" : "Contactar"}
+                        {exp.reservable ? "Reservar" : "Contactar"}
                       </Button>
                     </div>
                   </div>
@@ -470,23 +431,26 @@ export default function Shop({
       </section>
 
       {/* Reservation Form Modal */}
-      {/* {showReservationForm && selectedPlan && (
-        <Dialog open={showReservationForm} onOpenChange={setShowReservationForm}>
+      {reservationFormData && (
+        <Dialog
+          open={!!reservationFormData}
+          onOpenChange={(v) => (!v ? _setReservationFormData(undefined) : null)}
+        >
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Reservar: {selectedPlan.name}</DialogTitle>
+              <DialogTitle>Reservar: {reservationFormData.name}</DialogTitle>
               <DialogDescription>
                 Completa el formulario para realizar tu reserva
               </DialogDescription>
             </DialogHeader>
             <ReservationForm
-              plan={selectedPlan}
-              onComplete={handleReservationComplete}
-              onCancel={() => setShowReservationForm(false)}
+              experience={reservationFormData}
+              onComplete={() => _setReservationFormData(undefined)}
+              onCancel={() => _setReservationFormData(undefined)}
             />
           </DialogContent>
         </Dialog>
-      )} */}
+      )}
     </div>
   );
 }

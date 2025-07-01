@@ -48,6 +48,15 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
             />
           </div>
           <div className="flex flex-col gap-3">
+            <Label htmlFor="providerName">Proveedor de servicios</Label>
+            <Input
+              id="providerName"
+              placeholder="Ej. Mambo"
+              {...register("providerName")}
+              error={!!errors.providerName}
+            />
+          </div>
+          <div className="flex flex-col gap-3">
             <Label>Ubicación</Label>
             <Select
               {...register("originCityId")}
