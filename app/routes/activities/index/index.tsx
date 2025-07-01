@@ -24,6 +24,10 @@ import httpClient from "~/lib/http/http-client";
 import type { Route } from "../../../+types/root";
 import { ReservationForm } from "../components/reservation-form/reservation-form";
 
+export function meta() {
+  return [{ title: "Cartagena Turística" }];
+}
+
 export async function clientLoader() {
   const { data: experiences } = await httpClient.get<GetExperiencesData>(
     ApiRoute.EXPERIENCES
@@ -384,6 +388,15 @@ export default function Shop({
 
                             <div>
                               <h4 className="font-semibold text-gray-900 mb-2">
+                                Agencia
+                              </h4>
+                              <p className="text-gray-600 leading-relaxed">
+                                {exp.providerName}
+                              </p>
+                            </div>
+
+                            <div>
+                              <h4 className="font-semibold text-gray-900 mb-2">
                                 Descripción
                               </h4>
                               <p className="text-gray-600 leading-relaxed">
@@ -413,7 +426,15 @@ export default function Shop({
                       </Dialog>
                       <Button
                         onClick={() =>
-                          exp.reservable ? _setReservationFormData(exp) : null
+                          exp.reservable
+                            ? _setReservationFormData(exp)
+                            : (() => {
+                                const message = encodeURIComponent(
+                                  `Hola, me gustaría obtener más información sobre el plan ${exp.name}.`
+                                );
+                                const URL = `http://wa.me/57${exp.contactPhone}?text=${message}`;
+                                window.open(URL, "_blank");
+                              })()
                         }
                         className="bg-cyan-600 hover:bg-cyan-700"
                         size="sm"

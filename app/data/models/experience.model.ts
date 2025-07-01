@@ -31,6 +31,7 @@ interface ReservableDetails {
 export interface Experience {
   _id: string;
   name: string;
+  providerName: string;
   description: string;
   category: Category;
   duration: number;

@@ -12,6 +12,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsPhoneNumber,
   IsPositive,
   IsString,
   Max,
@@ -158,7 +159,7 @@ export class CreateExperienceDto {
   destinationIds: string[];
 
   @IsString()
-  @IsNotEmpty()
+  @IsPhoneNumber("CO")
   contactPhone: string;
 
   @IsPositive()

@@ -55,6 +55,12 @@ const DetailsView: React.FC<DetailsViewProps> = ({ exp }) => {
           </div>
         </div>
 
+        {/* Provider name */}
+        <div>
+          <h4 className="font-semibold text-gray-900 mb-2">Agencia</h4>
+          <p className="text-gray-600 leading-relaxed">{exp.providerName}</p>
+        </div>
+
         {/* Description */}
         <div>
           <h4 className="font-semibold text-gray-900 mb-2">Descripción</h4>
