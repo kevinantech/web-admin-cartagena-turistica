@@ -42,7 +42,7 @@ export default function Auth() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            CARTAGENA TURÍSTICA
+            VISITA CARTAGENA
           </h1>
           <p className="text-cyan-600 font-medium">Panel Administrativo</p>
         </div>

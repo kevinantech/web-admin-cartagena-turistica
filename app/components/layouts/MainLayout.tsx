@@ -74,7 +74,7 @@ export default function MainLayout() {
                 )}
               </Button>
               <h1 className="hidden text-xl font-bold text-gray-900 mr-8 md:block">
-                CARTAGENA TURÍSTICA
+                VISITA CARTAGENA
               </h1>
               <span className="text-lg text-cyan-600 md:text-sm font-medium">
                 Panel Administrativo

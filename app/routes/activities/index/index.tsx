@@ -25,7 +25,7 @@ import type { Route } from "../../../+types/root";
 import { ReservationForm } from "../components/reservation-form/reservation-form";
 
 export function meta() {
-  return [{ title: "Cartagena Turística" }];
+  return [{ title: "Visita Cartagena" }];
 }
 
 export async function clientLoader() {
