@@ -5,3 +5,7 @@ export enum Route {
   CATEGORIES = "/categories",
   ACTIVITIES = "/activities",
 }
+
+export enum AdminRoute {
+  EXPERIENCES = "/admin/experiences",
+}

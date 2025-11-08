@@ -1,4 +1,4 @@
-import { Route } from "@/common/enums/route-enum";
+import { AdminRoute } from "@/common/enums/route-enum";
 import { Button } from "@/components/ui/button";
 import type React from "react";
 import { NavLink } from "react-router";
@@ -11,7 +11,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({}) => {
       <Button type="submit" className="bg-cyan-600 hover:bg-cyan-700">
         Crear Plan
       </Button>
-      <NavLink to={Route.EXPERIENCES}>
+      <NavLink to={AdminRoute.EXPERIENCES}>
         <Button type="button" variant="outline">
           Cancelar
         </Button>

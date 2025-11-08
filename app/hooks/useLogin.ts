@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 import httpClient from "~/lib/http/http-client";
-import { Route } from "../common/enums/route-enum";
+import { AdminRoute, Route } from "../common/enums/route-enum";
 import { toast } from "./useToast";
 export const AUTH_KEY = "access_token";
 
@@ -30,7 +30,7 @@ export const useLogin = () => {
           description: "Inicio de sesión exitoso",
           variant: "success",
         });
-        navigate(Route.EXPERIENCES);
+        navigate(AdminRoute.EXPERIENCES);
       } else throw new Error("Error de autenticación");
     } catch (error) {
       toast({
