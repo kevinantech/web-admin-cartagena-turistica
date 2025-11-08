@@ -1,5 +1,5 @@
 import { ApiRoute } from "@/common/enums/api-route-enum";
-import { Route as WebRoute } from "@/common/enums/route-enum";
+import { AdminRoute, Route as WebRoute } from "@/common/enums/route-enum";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,7 +47,7 @@ export default function Experiences({
           <p className="text-gray-600 mt-2">Administra tus planes turísticos</p>
         </div>
         <Button
-          onClick={() => navigate(WebRoute.EXPERIENCES_CREATE)}
+          onClick={() => navigate(AdminRoute.EXPERIENCES_CREATE)}
           className="w-full mt-5 bg-cyan-600 hover:bg-cyan-700 xs:w-auto xs:mt-0"
         >
           <Plus className="w-4 h-4 mr-2" />
