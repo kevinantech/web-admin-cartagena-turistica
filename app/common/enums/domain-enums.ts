@@ -4,6 +4,6 @@ export enum PricingType {
 }
 
 export enum RestrictionMode {
-  PEOPLE = "PEOPLE",
-  BOOKINGS = "BOOKINGS",
+  MAX_PEOPLE = "MAX_PEOPLE",
+  MAX_BOOKINGS = "MAX_BOOKINGS",
 }

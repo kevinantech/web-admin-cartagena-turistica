@@ -5,10 +5,10 @@ export default [
   index("routes/activities/index/index.tsx"),
   route(Route.AUTH, "routes/auth.tsx"),
   layout("components/AdminLayout/AdminLayout.tsx", [
-    route(AdminRoute.EXPERIENCES, "routes/experiences/index/index.tsx"),
+    route(AdminRoute.EXPERIENCES, "components/pages/ExperiencePage/ExperiencePage.tsx"),
     route(
       AdminRoute.EXPERIENCES_CREATE,
-      "routes/experiences/create-experience/create-experience.tsx"
+      "components/pages/CreateExperiencePage/CreateExperiencePage.tsx"
     ),
     route(Route.CATEGORIES, "routes/categories.tsx"),
   ]),

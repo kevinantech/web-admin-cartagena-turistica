@@ -1,4 +1,4 @@
-import { PricingType, RestrictionMode } from "@/common/enums/common-enums";
+import { PricingType, RestrictionMode } from "@/common/enums/domain-enums";
 import { Button } from "@/components/ui/button";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Input } from "@/components/ui/input";
@@ -11,14 +11,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DollarSign, Plus, Trash, Users, Wrench } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
-import { CreateExperienceContext } from "../../create-experience.context";
-
+import { useCreateExperiencePage } from "./CreateExperiencePage.context";
 export type ReservableFormProps = {};
 
 const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
-  const { form } = useContext(CreateExperienceContext);
+  const { form } = useCreateExperiencePage();
   const {
     control,
     formState: { errors },
@@ -48,7 +47,7 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
   // Depende del defaultValue del useForm definido en un primer momento.
   const [restrictionBy_defaultValue] = useState(watch("reservable.restrictionBy"));
 
-  const restrByPeople = watch("reservable.restrictionBy") === RestrictionMode.PEOPLE;
+  const restrByPeople = watch("reservable.restrictionBy") === RestrictionMode.MAX_PEOPLE;
   const pricingType = watch("reservable.pricingType");
 
   // Permite establecer el pricingType
@@ -98,10 +97,10 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
               <SelectValue placeholder="Selecciona" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={RestrictionMode.PEOPLE}>
+              <SelectItem value={RestrictionMode.MAX_PEOPLE}>
                 Por cantidad de personas
               </SelectItem>
-              <SelectItem value={RestrictionMode.BOOKINGS}>
+              <SelectItem value={RestrictionMode.MAX_BOOKINGS}>
                 Por cantidad de reservas
               </SelectItem>
             </SelectContent>
@@ -320,4 +319,4 @@ const ReservableForm: React.FC<ReservableFormProps> = ({}) => {
   );
 };
 
-export default ReservableForm;
+export { ReservableForm };

@@ -21,19 +21,7 @@ const useMenuToggle = () => {
 export type AdminLayoutHook = ReturnType<typeof vm>;
 const vm = () => {
   const menuToggle = useMenuToggle();
-  const navigate = useNavigate();
-
-  /**
-   * Creates navigation handler when a navigation item is clicked.
-   */
-  function performMenuNavigation(path: string) {
-    return () => {
-      menuToggle.set(false);
-      navigate(path);
-    };
-  }
-
-  return { menuToggle, performMenuNavigation };
+  return { menuToggle };
 };
 
 const AdminLayoutProvider = () => {
@@ -41,15 +29,21 @@ const AdminLayoutProvider = () => {
 
   return (
     <AdminLayoutContext value={adminLayoutHook}>
-      <div className="min-h-screen bg-gray-50">
-        <Header />
-        <div className="flex max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-8">
+      <Header />
+      <div
+        // This div wrapper allows showing the scrollbar in the correct position when the display is more than max-w-7xl
+        className="bg-gray-50 overflow-y-auto"
+      >
+        <div className="flex items-start gap-8 h-[calc(100vh_-_3rem)] md:h-[calc(100vh_-_4rem)] max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-8">
           <MobileSidebar />
           <Sidebar />
           <main
-            className={cn("flex-1 transtion-[margin-left] ease-in-out duration-300", {
-              "ml-0 md:ml-64 lg:ml-0": adminLayoutHook.menuToggle.isOpen,
-            })}
+            className={cn(
+              "grow h-full transtion-[margin-left] ease-in-out duration-300",
+              {
+                "ml-0 md:ml-64 lg:ml-0": adminLayoutHook.menuToggle.isOpen,
+              }
+            )}
           >
             <Outlet />
           </main>

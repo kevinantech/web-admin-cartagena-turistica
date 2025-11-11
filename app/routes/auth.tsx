@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/Button";
 import {
   Card,
   CardContent,
@@ -41,9 +41,7 @@ export default function Auth() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            VISITA CARTAGENA
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">VISITA CARTAGENA</h1>
           <p className="text-cyan-600 font-medium">Panel Administrativo</p>
         </div>
 
@@ -72,9 +70,7 @@ export default function Auth() {
                   className="h-11"
                 />
                 {form.errors.email && (
-                  <p className="pl-2 text-red-500 text-xs">
-                    {form.errors.email.message}
-                  </p>
+                  <p className="pl-2 text-red-500 text-xs">{form.errors.email.message}</p>
                 )}
               </div>
               <div className="flex flex-col gap-3">
@@ -93,11 +89,7 @@ export default function Auth() {
                   </p>
                 )}
               </div>
-              <Button
-                type="submit"
-                className="w-full h-11 bg-cyan-600 hover:bg-cyan-700 text-white"
-                disabled={isLoading}
-              >
+              <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

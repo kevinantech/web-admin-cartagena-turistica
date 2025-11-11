@@ -12,17 +12,14 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type React from "react";
-import { useContext } from "react";
 import { Controller } from "react-hook-form";
-import { CreateExperienceContext } from "../../create-experience.context";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { useCreateExperiencePage } from "./CreateExperiencePage.context";
 
 export type BasicFormProps = {};
 
 const BasicForm: React.FC<BasicFormProps> = ({}) => {
-  const { form, pictures, categories, destinations } = useContext(
-    CreateExperienceContext
-  );
+  const { form, pictures, categories, destinations } = useCreateExperiencePage();
   const {
     control,
     formState: { errors },
@@ -59,10 +56,10 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
           <div className="flex flex-col gap-3">
             <Label>Ubicación</Label>
             <Select
-              {...register("originCityId")}
-              onValueChange={(v) => setValue("originCityId", v)}
+              {...register("locationId")}
+              onValueChange={(v) => setValue("locationId", v)}
             >
-              <SelectTrigger error={!!errors.originCityId}>
+              <SelectTrigger error={!!errors.locationId}>
                 <SelectValue placeholder="Selecciona una ubicación" />
               </SelectTrigger>
               <SelectContent>
@@ -95,7 +92,7 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
           <div className="flex flex-col gap-3">
             <Label htmlFor="destinations">Destinos</Label>
             <Controller
-              name="destinationIds"
+              name="tourStops"
               control={control}
               render={({ field, fieldState }) => (
                 <MultiSelect
@@ -166,14 +163,14 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
         {!_reservable && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <div className="flex flex-col gap-3">
-              <Label htmlFor="displayPrice">Precio</Label>
+              <Label htmlFor="basePrice">Precio</Label>
               <Controller
-                name="displayPrice"
+                name="basePrice"
                 control={control}
                 render={({ field }) => (
                   <CurrencyInput
-                    id="displayPrice"
-                    error={!!errors.displayPrice}
+                    id="basePrice"
+                    error={!!errors.basePrice}
                     onBlur={field.onBlur}
                     placeholder="$"
                     defaultValue={0}
@@ -189,4 +186,4 @@ const BasicForm: React.FC<BasicFormProps> = ({}) => {
   );
 };
 
-export default BasicForm;
+export { BasicForm };

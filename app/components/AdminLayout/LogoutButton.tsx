@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/Button";
 import { useLogout } from "@/hooks/useLogout";
 import { LogOut } from "lucide-react";
 import { cn } from "~/lib/utils";
@@ -10,9 +10,9 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ variant }) => {
   return (
     <Button
       onClick={handleLogout}
-      variant="outline"
+      variant="ghost"
       size="sm"
-      className={cn("border-red-300 text-red-600 hover:bg-red-200 hover:text-red-600", {
+      className={cn("text-muted-foreground hover:bg-red-100 hover:text-red-600", {
         "hidden lg:inline-flex": variant === "header",
       })}
     >

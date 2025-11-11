@@ -7,5 +7,5 @@ export enum Route {
 
 export enum AdminRoute {
   EXPERIENCES = "/admin/experiences",
-  EXPERIENCES_CREATE = `${AdminRoute.EXPERIENCES}`,
+  EXPERIENCES_CREATE = `${AdminRoute.EXPERIENCES}/create`,
 }

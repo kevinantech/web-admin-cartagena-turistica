@@ -115,15 +115,15 @@ const DetailsView: React.FC<DetailsViewProps> = ({ exp }) => {
                     </div> */}
                     <div>
                       <span className="text-sm font-medium text-gray-600">
-                        {exp.reservable?.restrictionBy === RestrictionMode.PEOPLE &&
+                        {exp.reservable?.restrictionBy === RestrictionMode.MAX_PEOPLE &&
                           "Máx. Personas"}
-                        {exp.reservable?.restrictionBy === RestrictionMode.BOOKINGS &&
+                        {exp.reservable?.restrictionBy === RestrictionMode.MAX_BOOKINGS &&
                           "Máx. Reservas/Día"}
                       </span>
                       <p className="text-gray-900">
-                        {exp.reservable?.restrictionBy === RestrictionMode.PEOPLE &&
+                        {exp.reservable?.restrictionBy === RestrictionMode.MAX_PEOPLE &&
                           exp.reservable.maxPeopleAllowed}
-                        {exp.reservable?.restrictionBy === RestrictionMode.BOOKINGS &&
+                        {exp.reservable?.restrictionBy === RestrictionMode.MAX_BOOKINGS &&
                           exp.reservable.maxPeoplePerBooking}
                       </p>
                     </div>

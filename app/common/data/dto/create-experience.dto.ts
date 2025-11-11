@@ -1,7 +1,7 @@
 /**
  * API DTO
- * Las propiedades que inicien con _ tienen una responsabilidad en el cliente y no en la API,
- * por eso se demarca esa diferencia.
+ * Properties that start with _ have client-side responsibility and not API responsibility,
+ * which is why this distinction is made.
  */
 import { PricingType, RestrictionMode } from "@/common/enums/domain-enums";
 import { Type } from "class-transformer";
@@ -152,12 +152,12 @@ export class CreateExperienceDto {
 
   @IsString()
   @IsNotEmpty()
-  originCityId: string;
+  locationId: string;
 
   @IsArray()
   @ArrayMinSize(1)
   @IsString({ each: true })
-  destinationIds: string[];
+  tourStops: string[];
 
   @IsString()
   @IsPhoneNumber("CO")
@@ -165,7 +165,7 @@ export class CreateExperienceDto {
 
   @IsPositive()
   @ValidateIf((o: CreateExperienceDto) => !o._reservable)
-  displayPrice: number;
+  basePrice: number;
 
   @ValidateIf((o: CreateExperienceDto) => o._reservable)
   @ValidateNested()
@@ -174,4 +174,49 @@ export class CreateExperienceDto {
 
   @IsBoolean()
   _reservable: boolean;
+}
+
+export type Range = {
+  from: number;
+  to: number;
+};
+
+/**
+ * Validates that ranges are valid and consecutive.
+ * A range is valid if it starts at globalMin, ends at globalMax, has no duplicates, and is consecutive with the previous range.
+ * @param ranges Array of integer ranges
+ * @param globalMin Lower limit
+ * @param globalMax Upper limit
+ * @returns True if ranges are valid and consecutive
+ * @example isValidRanges([{ from: 1, to: 3 }, { from: 4, to: 6 }, { from: 7, to: 10 }], 1, 10) // returns true
+ */
+export function isValidRanges(
+  ranges: Range[],
+  globalMin: number,
+  globalMax: number
+): boolean {
+  if (!ranges.length) return false;
+
+  // Ordenar por rango inicial
+  const sorted = [...ranges].sort((a, b) => a.from - b.from);
+
+  // El primer rango debe empezar desde globalMin
+  if (sorted[0].from !== globalMin) return false;
+
+  for (let i = 0; i < sorted.length; i++) {
+    const { from, to } = sorted[i];
+
+    // Cada rango debe estar dentro de los límites
+    if (from < globalMin || to > globalMax || from > to) return false;
+
+    // Validar que los rangos sean consecutivos
+    if (i > 0) {
+      const prev = sorted[i - 1];
+      if (from !== prev.to + 1) return false;
+    }
+  }
+
+  // El último rango debe terminar en globalMax
+  const last = sorted[sorted.length - 1];
+  return last.to === globalMax;
 }
